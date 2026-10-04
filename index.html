@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Sneaky Santa</title>
+<meta name="description" content="Sneak through the house, deliver the presents and escape up the chimney without waking the family.">
+<!-- Home Screen web app (iPad: Share → Add to Home Screen) -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Santa">
+<meta name="theme-color" content="#0b0f1c">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<script type="module" src="src/main.js"></script>
+</head>
+<body>
+<canvas id="screen" aria-label="Game"></canvas>
+
+<div class="hud">
+  <div class="hud-left">
+    <div class="score" id="score">0</div>
+    <div class="objective" id="objective">Slide down the chimney</div>
+    <div class="chances" id="chances">ATTEMPT 1</div>
+  </div>
+  <div class="hud-buttons">
+    <button id="btnFull" type="button" hidden>Fullscreen</button>
+    <button id="btnSound" type="button" aria-pressed="true">Sound</button>
+    <button id="btnPause" type="button" aria-pressed="false">Pause</button>
+    <button id="btnDebug" type="button" aria-pressed="false">Debug</button>
+  </div>
+</div>
+
+<div id="prompt" hidden></div>
+<div id="toast" hidden></div>
+<div id="debug" hidden></div>
+
+<button class="dir-btn" id="btnLeft" type="button" aria-label="Walk left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 4 6 12l10 8z"/></svg></button>
+<button class="dir-btn" id="btnRight" type="button" aria-label="Walk right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 4 10 8-10 8z"/></svg></button>
+<button class="touch-btn" id="btnJump" type="button" aria-label="Jump"><span class="lbl">JUMP</span></button>
+<button class="touch-btn" id="btnAction" type="button" aria-label="Action"><span class="lbl" id="actionLbl">ACTION</span></button>
+
+<div class="overlay" id="startScreen">
+  <div class="card">
+    <h1>Sneaky <span>Santa</span></h1>
+    <p>Sneak through the house, leave the presents under the tree and get back up the chimney without waking the family.</p>
+    <ul>
+      <li>Rooms stay dark until you open their door. Careful: opening a door wakes anyone asleep inside.</li>
+      <li>If someone looks your way, hide in a cupboard, under a table or in the shadows.</li>
+      <li>The cookies and the milk are hidden in different rooms. Find both for bonus points.</li>
+    </ul>
+    <p class="keys">Touch: arrow buttons to walk · JUMP · ACTION (hide, stairs, deliver)<br>Keys: ←→ walk · ↑↓ stairs · Space jump · E action</p>
+    <button class="go" id="btnStart" type="button">Start delivering</button>
+  </div>
+</div>
+
+<div class="overlay" id="endScreen" hidden>
+  <div class="card">
+    <h1 id="endTitle">Merry Christmas!</h1>
+    <p id="endText"></p>
+    <table id="endTable"></table>
+    <button class="go" id="btnAgain" type="button">Play again</button>
+  </div>
+</div>
+</body>
+</html>
