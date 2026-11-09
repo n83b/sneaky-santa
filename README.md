@@ -16,6 +16,10 @@ python3 -m http.server
 
 On an iPad, host it anywhere (GitHub Pages works), open it in Safari, then **Share → Add to Home Screen** to play full screen without browser bars.
 
+## Defold version
+
+A Defold port lives in [`defold/`](defold/). Open `defold/game.project` in the Defold editor; see [`defold/README.md`](defold/README.md).
+
 ## Controls
 
 | Action | Touch | Keyboard | Gamepad |

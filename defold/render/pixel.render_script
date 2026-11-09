@@ -1,0 +1,76 @@
+-- Pixel-perfect render script for Sneaky Santa.
+--
+-- The world is 320x200 game pixels. It is scaled up by a whole number where the window
+-- allows (crisp, even pixels) and centred, leaving a band at the top for the HUD.
+-- The GUI is drawn over the whole window afterwards.
+
+local GAME_W = 320
+local GAME_H = 200
+local HUD_BAND = 40 / 640   -- top band reserved for the HUD, as a share of the window height
+
+local function game_viewport(win_w, win_h)
+	local band = math.floor(win_h * HUD_BAND + 0.5)
+	local fit = math.min(win_w / GAME_W, (win_h - band) / GAME_H)
+	local zoom = fit >= 2 and math.floor(fit) or math.max(fit, 0.25)
+	local w = math.floor(GAME_W * zoom + 0.5)
+	local h = math.floor(GAME_H * zoom + 0.5)
+	local left = math.floor((win_w - w) / 2 + 0.5)
+	local top = math.floor(math.max(band, (win_h - h) / 2) + 0.5)
+	return left, win_h - top - h, w, h
+end
+
+function init(self)
+	self.tile = render.predicate({ "tile" })
+	self.particle = render.predicate({ "particle" })
+	self.gui = render.predicate({ "gui" })
+	self.debug_text = render.predicate({ "debug_text" })
+
+	local clear = vmath.vector4(
+		sys.get_config_number("render.clear_color_red", 0),
+		sys.get_config_number("render.clear_color_green", 0),
+		sys.get_config_number("render.clear_color_blue", 0),
+		sys.get_config_number("render.clear_color_alpha", 1))
+	self.clear_buffers = {
+		[graphics.BUFFER_TYPE_COLOR0_BIT] = clear,
+		[graphics.BUFFER_TYPE_DEPTH_BIT] = 1,
+		[graphics.BUFFER_TYPE_STENCIL_BIT] = 0,
+	}
+	self.view = vmath.matrix4()
+	self.world_proj = vmath.matrix4_orthographic(0, GAME_W, 0, GAME_H, -1, 1)
+	self.world_options = { frustum = self.world_proj * self.view }
+end
+
+function update(self)
+	local win_w = render.get_window_width()
+	local win_h = render.get_window_height()
+	if win_w <= 0 or win_h <= 0 then return end
+
+	render.set_depth_mask(true)
+	render.set_stencil_mask(0xff)
+	render.clear(self.clear_buffers)
+	render.set_depth_mask(false)
+
+	-- World: sprites drawn back to front by z, into the scaled game area.
+	local x, y, w, h = game_viewport(win_w, win_h)
+	render.set_viewport(x, y, w, h)
+	render.set_view(self.view)
+	render.set_projection(self.world_proj)
+	render.disable_state(graphics.STATE_DEPTH_TEST)
+	render.disable_state(graphics.STATE_CULL_FACE)
+	render.enable_state(graphics.STATE_BLEND)
+	render.set_blend_func(graphics.BLEND_FACTOR_SRC_ALPHA, graphics.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA)
+	render.draw(self.tile, self.world_options)
+	render.draw(self.particle, self.world_options)
+	render.draw_debug3d()
+
+	-- GUI: the whole window.
+	render.set_viewport(0, 0, win_w, win_h)
+	local gui_proj = vmath.matrix4_orthographic(0, win_w, 0, win_h, -1, 1)
+	render.set_projection(gui_proj)
+	local gui_options = { frustum = gui_proj * self.view }
+	render.enable_state(graphics.STATE_STENCIL_TEST)
+	render.draw(self.gui, gui_options)
+	render.draw(self.debug_text, gui_options)
+	render.disable_state(graphics.STATE_STENCIL_TEST)
+	render.disable_state(graphics.STATE_BLEND)
+end

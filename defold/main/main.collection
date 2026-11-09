@@ -1,0 +1,1382 @@
+name: "main"
+scale_along_z: 0
+embedded_instances {
+  id: "game"
+  data: "components {\n  id: \"game\"\n  component: \"/main/game.script\"\n}\nembedded_components {\n  id: \"snd_caught\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/caught.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_chimney\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/chimney.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_cookie\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/cookie.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_creak\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/creak.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_deliver\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/deliver.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_door\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/door.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_escape\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/escape.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_hide\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/hide.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_jump\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/jump.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_land\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/land.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_milk\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/milk.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_notice\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/notice.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_step_floor_a\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/step_floor_a.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_step_floor_b\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/step_floor_b.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_step_roof_a\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/step_roof_a.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_step_roof_b\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/step_roof_b.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_unhide\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/unhide.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_wake\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/wake.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\nembedded_components {\n  id: \"snd_win\"\n  type: \"sound\"\n  data: \"sound: \\\"/assets/sounds/win.wav\\\"\\nlooping: 0\\ngroup: \\\"master\\\"\\ngain: 0.25\\n\"\n}\n"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "hud"
+  data: "components {\n  id: \"hud\"\n  component: \"/main/hud.gui\"\n}\n"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "bg"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"background\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 160.0
+    y: 100.0
+    z: -0.9
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "stars"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"stars\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 160.0
+    y: 185.0
+    z: -0.88
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "room_kids"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"room_kids\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 68.0
+    y: 140.0
+    z: -0.5
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "room_hall3"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"room_hall3\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 165.0
+    y: 140.0
+    z: -0.5
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "room_attic"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"room_attic\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 257.0
+    y: 140.0
+    z: -0.5
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "room_bath"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"room_bath\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 56.0
+    y: 92.0
+    z: -0.5
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "room_landing"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"room_landing\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 151.0
+    y: 92.0
+    z: -0.5
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "room_leo"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"room_leo\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 255.0
+    y: 92.0
+    z: -0.5
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "room_kitchen"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"room_kitchen\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 70.0
+    y: 44.0
+    z: -0.5
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "room_hall1"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"room_hall1\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 160.0
+    y: 44.0
+    z: -0.5
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "room_lounge"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"room_lounge\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 248.0
+    y: 44.0
+    z: -0.5
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "stairs_1_flight"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"stairs_1_flight\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 183.0
+    y: 99.5
+    z: -0.48
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "stairs_1_railing"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"stairs_1_railing\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 195.0
+    y: 123.5
+    z: -0.48
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "stairs_2_flight"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"stairs_2_flight\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 155.0
+    y: 51.5
+    z: -0.48
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "stairs_2_railing"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"stairs_2_railing\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 142.0
+    y: 75.5
+    z: -0.48
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "shadow_1"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"shadow_1\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 199.0
+    y: 140.0
+    z: -0.47
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "shadow_2"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"shadow_2\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 171.0
+    y: 92.0
+    z: -0.47
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "shadow_3"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"shadow_3\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 188.0
+    y: 44.0
+    z: -0.47
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "milk"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"milk\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 67.0
+    y: 129.0
+    z: -0.45
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "cookies"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"cookies\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 102.0
+    y: 39.5
+    z: -0.45
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "presents"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"presents\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 285.0
+    y: 25.0
+    z: -0.45
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "embers"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"embers\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 206.0
+    y: 24.5
+    z: -0.45
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "tree_lights"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"tree_lights\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 285.5
+    y: 39.5
+    z: -0.45
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "arrow_up_1"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"arrow_up\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 160.5
+    y: 88.5
+    z: -0.44
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "arrow_down_1"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"arrow_down\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 204.5
+    y: 136.5
+    z: -0.44
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "arrow_up_2"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"arrow_up\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 176.5
+    y: 40.5
+    z: -0.44
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "arrow_down_2"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"arrow_down\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 132.5
+    y: 88.5
+    z: -0.44
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "frame"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"frame\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 160.0
+    y: 90.0
+    z: -0.3
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "door_1"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"door_closed\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 120.5
+    y: 128.5
+    z: -0.25
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "door_2"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"door_closed\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 210.5
+    y: 128.5
+    z: -0.25
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "door_3"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"door_closed\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 96.5
+    y: 80.5
+    z: -0.25
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "door_4"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"door_closed\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 206.5
+    y: 80.5
+    z: -0.25
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "door_5"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"door_closed\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 124.5
+    y: 32.5
+    z: -0.25
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "door_6"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"door_closed\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 196.5
+    y: 32.5
+    z: -0.25
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "dim_kids"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 68.0
+    y: 140.0
+    z: -0.2
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 104.0
+    y: 44.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "dim_hall3"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 165.0
+    y: 140.0
+    z: -0.2
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 90.0
+    y: 44.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "dim_attic"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 257.0
+    y: 140.0
+    z: -0.2
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 94.0
+    y: 44.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "dim_bath"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 56.0
+    y: 92.0
+    z: -0.2
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 80.0
+    y: 44.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "dim_landing"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 151.0
+    y: 92.0
+    z: -0.2
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 110.0
+    y: 44.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "dim_leo"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 255.0
+    y: 92.0
+    z: -0.2
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 98.0
+    y: 44.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "dim_kitchen"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 70.0
+    y: 44.0
+    z: -0.2
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 108.0
+    y: 44.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "dim_hall1"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 160.0
+    y: 44.0
+    z: -0.2
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 72.0
+    y: 44.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "dim_lounge"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 250.0
+    y: 44.0
+    z: -0.2
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 108.0
+    y: 44.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "hl_glow"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 0.5
+    y: 199.5
+    z: -0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "hl_1"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 0.5
+    y: 199.5
+    z: -0.09
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "hl_2"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 0.5
+    y: 199.5
+    z: -0.09
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "hl_3"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 0.5
+    y: 199.5
+    z: -0.09
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "hl_4"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 0.5
+    y: 199.5
+    z: -0.09
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "hl_5"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 0.5
+    y: 199.5
+    z: -0.09
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "hl_6"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 0.5
+    y: 199.5
+    z: -0.09
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "hl_7"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 0.5
+    y: 199.5
+    z: -0.09
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "hl_8"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"pixel\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 0.5
+    y: 199.5
+    z: -0.09
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "cone_mia"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"cone_kid\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 73.0
+    y: 127.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "npc_mia"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"mia_0\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 41.0
+    y: 122.5
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "mark_mia"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"question\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 41.5
+    y: 132.5
+    z: 0.15
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "cone_leo"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"cone_kid\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 282.0
+    y: 79.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "npc_leo"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"leo_0\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 250.0
+    y: 74.5
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "mark_leo"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"question\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 250.5
+    y: 84.5
+    z: 0.15
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "cone_dad"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"cone_adult\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 102.0
+    y: 33.5
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "npc_dad"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"dad_0\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 70.5
+    y: 29.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "mark_dad"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"question\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 70.5
+    y: 41.5
+    z: 0.15
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "mia_bed"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"mia_sleep\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 33.0
+    y: 131.5
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "zed_1"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"zed\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 39.5
+    y: 136.5
+    z: 0.15
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "zed_2"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"zed\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 41.5
+    y: 140.5
+    z: 0.15
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "alarm"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"alarm\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 33.5
+    y: 142.5
+    z: 0.15
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "eyes"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"eyes\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 2.0
+    y: 199.5
+    z: 0.3
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "santa"
+  data: "embedded_components {\n  id: \"sprite\"\n  type: \"sprite\"\n  data: \"default_animation: \\\"santa_sack_0\\\"\\nmaterial: \\\"/builtins/materials/sprite.material\\\"\\ntextures {\\n  sampler: \\\"texture_sampler\\\"\\n  texture: \\\"/assets/game.atlas\\\"\\n}\\n\"\n}\n"
+  position {
+    x: 60.0
+    y: 171.5
+    z: 0.3
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}

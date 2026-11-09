@@ -1,0 +1,40 @@
+[project]
+title = Sneaky Santa
+version = 1.0
+
+[bootstrap]
+main_collection = /main/main.collectionc
+render = /render/pixel.renderc
+
+[display]
+width = 960
+height = 640
+high_dpi = 1
+
+[input]
+game_binding = /input/game.input_bindingc
+
+[graphics]
+default_texture_min_filter = nearest
+default_texture_mag_filter = nearest
+
+[sprite]
+subpixels = 0
+
+[script]
+shared_state = 1
+
+[render]
+clear_color_red = 0.043
+clear_color_green = 0.059
+clear_color_blue = 0.11
+clear_color_alpha = 1
+
+[ios]
+bundle_identifier = com.n83b.sneakysanta
+
+[android]
+package = com.n83b.sneakysanta
+
+[osx]
+bundle_identifier = com.n83b.sneakysanta

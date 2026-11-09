@@ -1,0 +1,185 @@
+-- HUD: score, objective, prompt, toasts, the start and end cards, and the touch controls.
+--
+-- game.script sends a "hud" message whenever what's shown changes. Touch and mouse
+-- presses on the buttons are sent back to game.script as "ui" messages.
+-- Each finger owns the button it pressed until it lifts, so you can hold an arrow
+-- and tap JUMP or ACTION with the other thumb.
+
+local GAME_URL = "/game#game"
+local TOUCH = hash("touch")
+local MULTITOUCH = hash("multitouch")
+local MSG_HUD = hash("hud")
+
+local INK = vmath.vector4(238 / 255, 240 / 255, 246 / 255, 1)
+local GOLD = vmath.vector4(243 / 255, 195 / 255, 90 / 255, 1)
+local NIGHT = vmath.vector4(11 / 255, 15 / 255, 28 / 255, 1)
+
+-- Buttons that can be pressed, and which screen each belongs to.
+local BUTTONS = {
+	{ id = "btn_left",     screen = "play",  hold = true },
+	{ id = "btn_right",    screen = "play",  hold = true },
+	{ id = "btn_jump",     screen = "play" },
+	{ id = "btn_action",   screen = "play" },
+	{ id = "btn_sound",    screen = "any" },
+	{ id = "btn_pause",    screen = "any" },
+	{ id = "start_button", screen = "title" },
+	{ id = "end_button",   screen = "won" },
+}
+
+local function set_text(self, id, text)
+	gui.set_text(self.n[id], text)
+end
+
+-- Resize a box around its text so prompts and toasts fit their contents.
+local function fit_box(self, box_id, text_id, pad_x, min_w)
+	local text_node = self.n[text_id]
+	local metrics = gui.get_text_metrics_from_node(text_node)
+	local scale = gui.get_scale(text_node)
+	local size = gui.get_size(self.n[box_id])
+	size.x = math.max(min_w or 0, metrics.width * scale.x + pad_x * 2)
+	size.y = math.max(size.y, metrics.height * scale.y + 16)
+	gui.set_size(self.n[box_id], size)
+end
+
+local function screen_active(self, screen)
+	if screen == "any" then return true end
+	return self.phase == screen or (screen == "play" and (self.phase == "play" or self.phase == "caught" or self.phase == "paused"))
+end
+
+local function held(self, button_id)
+	for _, owned in pairs(self.pointers) do
+		if owned == button_id then return true end
+	end
+	return false
+end
+
+local function refresh_buttons(self)
+	local left, right = held(self, "btn_left"), held(self, "btn_right")
+	if left ~= self.sent_left or right ~= self.sent_right then
+		self.sent_left, self.sent_right = left, right
+		msg.post(GAME_URL, "ui", { cmd = "hold", left = left, right = right })
+	end
+	gui.set_color(self.n.btn_left, left and GOLD or self.key_colour)
+	gui.set_color(self.n.btn_right, right and GOLD or self.key_colour)
+	gui.set_color(self.n.btn_left_label, left and NIGHT or INK)
+	gui.set_color(self.n.btn_right_label, right and NIGHT or INK)
+	gui.set_scale(self.n.btn_jump, held(self, "btn_jump") and vmath.vector3(0.92, 0.92, 1) or vmath.vector3(1, 1, 1))
+	gui.set_scale(self.n.btn_action, held(self, "btn_action") and vmath.vector3(0.92, 0.92, 1) or vmath.vector3(1, 1, 1))
+end
+
+local function press(self, button)
+	local id = button.id
+	if id == "btn_jump" then
+		msg.post(GAME_URL, "ui", { cmd = "tap", button = "jump" })
+	elseif id == "btn_action" then
+		msg.post(GAME_URL, "ui", { cmd = "tap", button = "action" })
+	elseif id == "btn_sound" then
+		msg.post(GAME_URL, "ui", { cmd = "sound" })
+	elseif id == "btn_pause" then
+		msg.post(GAME_URL, "ui", { cmd = "pause" })
+	elseif id == "start_button" or id == "end_button" then
+		msg.post(GAME_URL, "ui", { cmd = "start" })
+	end
+end
+
+-- Returns true when the pointer is on (or holding) a button.
+local function pointer(self, pid, x, y, pressed, released)
+	if released then
+		local had = self.pointers[pid] ~= nil
+		self.pointers[pid] = nil
+		refresh_buttons(self)
+		return had
+	end
+	if not pressed then
+		return self.pointers[pid] ~= nil
+	end
+	for _, b in ipairs(BUTTONS) do
+		if screen_active(self, b.screen) and gui.pick_node(self.n[b.id], x, y) then
+			local already = held(self, b.id)
+			self.pointers[pid] = b.id
+			if not already then press(self, b) end
+			refresh_buttons(self)
+			return true
+		end
+	end
+	return false
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.n = setmetatable({}, { __index = function(t, id)
+		local node = gui.get_node(id)
+		rawset(t, id, node)
+		return node
+	end })
+	self.pointers = {}
+	self.phase = "title"
+	self.key_colour = gui.get_color(self.n.btn_left)
+	self.sent_left, self.sent_right = false, false
+end
+
+function on_message(self, message_id, m)
+	if message_id ~= MSG_HUD then return end
+	self.phase = m.phase
+
+	set_text(self, "score", m.score)
+	set_text(self, "objective", m.objective)
+	set_text(self, "attempt", "ATTEMPT " .. tostring(m.attempt))
+
+	set_text(self, "btn_sound_label", m.muted and "MUTED" or "SOUND")
+	gui.set_color(self.n.btn_sound_label, m.muted and INK or GOLD)
+	set_text(self, "btn_pause_label", m.phase == "paused" and "RESUME" or "PAUSE")
+	gui.set_color(self.n.btn_pause_label, m.phase == "paused" and GOLD or INK)
+	set_text(self, "btn_action_label", m.action_label)
+
+	local has_prompt = m.prompt ~= ""
+	gui.set_enabled(self.n.prompt, has_prompt)
+	if has_prompt then
+		set_text(self, "prompt_text", m.prompt .. "   " .. m.prompt_key)
+		fit_box(self, "prompt", "prompt_text", 14, 120)
+	end
+
+	local has_toast = m.toast ~= ""
+	gui.set_enabled(self.n.toast, has_toast)
+	if has_toast then
+		set_text(self, "toast_text", m.toast)
+		fit_box(self, "toast", "toast_text", 18, 160)
+	end
+
+	local playing = m.phase == "play" or m.phase == "caught" or m.phase == "paused"
+	for _, id in ipairs({ "btn_left", "btn_right", "btn_jump", "btn_action" }) do
+		gui.set_enabled(self.n[id], playing)
+	end
+	gui.set_enabled(self.n.start, m.phase == "title")
+	gui.set_enabled(self.n["end"], m.phase == "won")
+	if m.phase == "won" and m.end_title then
+		set_text(self, "end_title", m.end_title)
+		set_text(self, "end_text", m.end_text)
+		set_text(self, "end_labels", m.end_labels)
+		set_text(self, "end_points", m.end_points)
+		set_text(self, "end_total", m.end_total)
+		set_text(self, "end_best", m.end_best)
+	end
+	if not playing then
+		-- Let go of any held arrows when play stops.
+		self.pointers = {}
+		refresh_buttons(self)
+	end
+end
+
+function on_input(self, action_id, action)
+	if action_id == MULTITOUCH and action.touch then
+		local used = false
+		for _, t in ipairs(action.touch) do
+			if pointer(self, t.id, t.x, t.y, t.pressed, t.released) then used = true end
+		end
+		return used
+	elseif action_id == TOUCH then
+		return pointer(self, "mouse", action.x, action.y, action.pressed, action.released)
+	end
+	return false
+end
+
+function final(self)
+	msg.post(".", "release_input_focus")
+end

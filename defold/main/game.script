@@ -1,0 +1,522 @@
+-- Runs Sneaky Santa.
+--
+-- Feeds keyboard, gamepad and touch input into the rules (modules/game.lua) at a fixed
+-- 60 Hz, then mirrors the game state onto the sprites in main.collection, plays sounds
+-- and sends the HUD (hud.gui) what it needs to show.
+--
+-- Game logic uses the web version's coordinates: 320x200 with y pointing DOWN.
+-- Defold's world has y pointing UP, so place() flips it.
+
+local level = require "modules.level"
+local gamemod = require "modules.game"
+local art = require "modules.art"
+
+local FLOOR = level.FLOOR
+local H = level.H
+local STEP = level.STEP
+local HUD_URL = "/hud#hud"
+local SAVE_APP = "sneaky_santa"
+
+local ACTIONS = {
+	left = hash("left"), right = hash("right"), up = hash("up"), down = hash("down"),
+	jump = hash("jump"), action = hash("action"), pause = hash("pause"),
+	stick_left = hash("stick_left"), stick_right = hash("stick_right"),
+	stick_up = hash("stick_up"), stick_down = hash("stick_down"),
+}
+local MSG_UI = hash("ui")
+local TINT = hash("tint")
+
+local GLOW = vmath.vector3(243 / 255, 195 / 255, 90 / 255)
+local CONE = vmath.vector3(1, 226 / 255, 150 / 255)
+local DIM = vmath.vector4(4 / 255, 6 / 255, 14 / 255, 0.35)
+
+local function round(v)
+	return math.floor(v + 0.5)
+end
+
+-- ---------------------------------------------------------------- sprite helpers (cached)
+
+local function sprite_url(self, id)
+	local u = self.urls[id]
+	if not u then
+		u = msg.url(nil, "/" .. id, "sprite")
+		self.urls[id] = u
+	end
+	return u
+end
+
+local function show(self, id, on)
+	if self.shown[id] ~= on then
+		self.shown[id] = on
+		msg.post(sprite_url(self, id), on and "enable" or "disable")
+	end
+end
+
+local function play(self, id, anim)
+	if self.anims[id] ~= anim then
+		self.anims[id] = anim
+		sprite.play_flipbook(sprite_url(self, id), anim)
+	end
+end
+
+local function flip(self, id, on)
+	if self.flips[id] ~= on then
+		self.flips[id] = on
+		sprite.set_hflip(sprite_url(self, id), on)
+	end
+end
+
+-- Place a sprite by its top-left corner and size in game coordinates.
+local function place(id, left, top, w, h)
+	go.set_position(vmath.vector3(left + w / 2, H - (top + h / 2), art.z[id]), "/" .. id)
+end
+
+local function tint(self, id, rgb, a)
+	go.set(sprite_url(self, id), TINT, vmath.vector4(rgb.x, rgb.y, rgb.z, a))
+end
+
+-- A 1x1 white pixel stretched into a rectangle.
+local function pixel_rect(self, id, x, y, w, h, rgb, a)
+	if w <= 0 or h <= 0 then
+		show(self, id, false)
+		return
+	end
+	show(self, id, true)
+	place(id, x, y, w, h)
+	go.set_scale(vmath.vector3(w, h, 1), "/" .. id)
+	tint(self, id, rgb, a)
+end
+
+-- ---------------------------------------------------------------- saving
+
+local function save(self)
+	sys.save(self.save_path, { best = self.game.best, muted = self.muted })
+end
+
+local function apply_mute(self)
+	sound.set_group_gain(hash("master"), self.muted and 0 or 1)
+end
+
+-- ---------------------------------------------------------------- sound
+
+local function play_sound(self, name, gain)
+	if name == "step_floor" or name == "step_roof" then
+		self.step_flip = not self.step_flip
+		name = name .. (self.step_flip and "_a" or "_b")
+	end
+	sound.play("/game#snd_" .. name, { gain = gain or 1 })
+end
+
+-- ---------------------------------------------------------------- state -> sprites
+
+local function revealed_at(g, floor, x)
+	local r = level.room_at(floor, x)
+	return r ~= nil and g.revealed[r.id] == true
+end
+
+local function sync_house(self, g)
+	for _, r in ipairs(level.ROOMS) do
+		local seen = g.revealed[r.id] == true
+		show(self, "room_" .. r.id, seen)
+		-- Dim every revealed room except the one Santa is in.
+		show(self, "dim_" .. r.id, seen and r.id ~= g.room_id)
+	end
+
+	local bob = round(math.sin(g.time * 4))
+	for i, st in ipairs(level.STAIRS) do
+		local low = revealed_at(g, st.lower, st.bottom)
+		local up = revealed_at(g, st.lower - 1, st.top)
+		show(self, "stairs_" .. i .. "_flight", low)
+		show(self, "stairs_" .. i .. "_railing", up)
+		show(self, "arrow_up_" .. i, low)
+		show(self, "arrow_down_" .. i, up)
+		if low then place("arrow_up_" .. i, st.bottom - 1, FLOOR[st.lower] - 20 + bob, 3, 3) end
+		if up then place("arrow_down_" .. i, st.top - 1, FLOOR[st.lower - 1] - 20 + bob, 3, 3) end
+	end
+	for k, z in ipairs(level.SHADOWS) do
+		show(self, "shadow_" .. k, revealed_at(g, z.floor, z.x0 + 1))
+	end
+
+	local lounge = g.revealed.lounge == true
+	show(self, "milk", g.revealed.kids == true and not g.milk)
+	show(self, "cookies", g.revealed.kitchen == true and not g.cookies)
+	show(self, "presents", lounge and g.delivered)
+	show(self, "embers", lounge)
+	show(self, "tree_lights", lounge)
+
+	for k, d in ipairs(g.doors) do
+		local anim = "door_closed"
+		if d.open then anim = d.side > 0 and "door_open_r" or "door_open_l" end
+		play(self, "door_" .. k, anim)
+	end
+end
+
+local function interaction_bounds(g, it)
+	local pad = level.STAIR_PAD
+	local kind = it.kind
+	if kind == "hide" or kind == "unhide" then
+		local h = it.hide or g.santa.hide
+		if not h then return nil end
+		local y = FLOOR[h.floor]
+		local ht = level.HIDE_HEIGHT[h.kind] or (y - level.ceiling(h.floor) - 4)
+		return h.x0, y - ht, h.x1, y
+	elseif kind == "stairs_up" then
+		local st = it.stair
+		return math.min(st.bottom, st.top) - pad, FLOOR[st.lower - 1] - 2, math.max(st.bottom, st.top) + pad, FLOOR[st.lower]
+	elseif kind == "stairs_down" then
+		local st = it.stair
+		local w0, w1 = level.well_range(st)
+		local y = FLOOR[st.lower - 1]
+		return math.min(w0, w1) - pad, y - 12, math.max(w0, w1) + pad, y + 4
+	elseif kind == "chimney_down" then
+		return level.CHIMNEY_X - 12, 13, level.CHIMNEY_X + 12, FLOOR[0]
+	elseif kind == "escape" then
+		return level.CHIMNEY_X - 15, FLOOR[1] - 23, level.CHIMNEY_X + 15, FLOOR[1]
+	elseif kind == "deliver" then
+		local y = FLOOR[level.TREE_FLOOR]
+		return level.TREE_X - 16, y - 42, level.TREE_X + 16, y
+	end
+end
+
+-- Pulsing gold corner brackets around whatever ACTION would use.
+local function sync_highlight(self, g)
+	local it = g.phase == "play" and g.interaction or nil
+	local bx0, by0, bx1, by1
+	if it then bx0, by0, bx1, by1 = interaction_bounds(g, it) end
+	if not bx0 then
+		show(self, "hl_glow", false)
+		for k = 1, 8 do show(self, "hl_" .. k, false) end
+		return
+	end
+	local resting = it.kind == "unhide"
+	local pulse = 0.55 + 0.35 * math.sin(g.time * 6)
+	local x0, y0 = round(bx0) - 1, round(by0) - 1
+	local x1, y1 = round(bx1) + 1, round(by1)
+	local w, h = x1 - x0, y1 - y0
+	local l = math.min(5, math.floor(w / 3), math.floor(h / 3))
+	local a = resting and 0.35 or pulse
+	pixel_rect(self, "hl_glow", x0, y0, w, h, GLOW, resting and 0.04 or 0.09 * pulse)
+	pixel_rect(self, "hl_1", x0, y0, l, 1, GLOW, a)
+	pixel_rect(self, "hl_2", x0, y0, 1, l, GLOW, a)
+	pixel_rect(self, "hl_3", x1 - l, y0, l, 1, GLOW, a)
+	pixel_rect(self, "hl_4", x1 - 1, y0, 1, l, GLOW, a)
+	pixel_rect(self, "hl_5", x0, y1 - 1, l, 1, GLOW, a)
+	pixel_rect(self, "hl_6", x0, y1 - l, 1, l, GLOW, a)
+	pixel_rect(self, "hl_7", x1 - l, y1 - 1, l, 1, GLOW, a)
+	pixel_rect(self, "hl_8", x1 - 1, y1 - l, 1, l, GLOW, a)
+end
+
+local function npc_visible(g, n)
+	if revealed_at(g, n.floor, n.x) then return true end
+	local s = g.santa
+	return n.floor == s.floor and math.abs(n.x - s.x) < 80 and not g:door_between(n.floor, n.x, s.x)
+end
+
+local function sync_family(self, g)
+	for _, n in ipairs(g.npcs) do
+		local id = n.id
+		local y = FLOOR[n.floor]
+		local visible = npc_visible(g, n)
+		local in_bed = n.state == "asleep" or n.state == "stir"
+		local walker = visible and not in_bed
+
+		show(self, "npc_" .. id, walker)
+		show(self, "cone_" .. id, walker)
+
+		if id == "mia" then
+			local sitting = n.state == "stir" and n.stir_phase == "up"
+			show(self, "mia_bed", visible and in_bed)
+			if visible and in_bed then play(self, "mia_bed", sitting and "mia_sit" or "mia_sleep") end
+			show(self, "alarm", visible and sitting)
+			-- Rising Z's: one while asleep, two quicker ones once a door has disturbed her.
+			local snoozing = visible and in_bed and not sitting
+			local fast = n.state == "stir"
+			local count = fast and 2 or 1
+			local speed = fast and 9 or 4
+			for i = 1, 2 do
+				local zid = "zed_" .. i
+				local on = snoozing and i <= count
+				show(self, zid, on)
+				if on then
+					local t = (g.time * speed + (i - 1) * 4) % 8
+					place(zid, 38 + round(t / 3), round(y - 17 - t), 3, 3)
+					tint(self, zid, vmath.vector3(1, 1, 1), 0.85 * (1 - t / 8))
+				end
+			end
+		end
+
+		local mark = nil
+		if walker then
+			if g.phase == "caught" and g.caught_by == n then
+				mark = "bang"
+				play(self, "mark_" .. id, "bang")
+				place("mark_" .. id, round(n.x), y - n.height - 8, 1, 5)
+			elseif n.sus > 0.05 then
+				mark = "question"
+				play(self, "mark_" .. id, "question")
+				place("mark_" .. id, round(n.x - 1), y - n.height - 8, 3, 5)
+			end
+		end
+		show(self, "mark_" .. id, mark ~= nil)
+
+		if walker then
+			local frame = n.state == "walk" and math.floor(n.anim) % 2 or 0
+			local anim = id .. "_" .. frame
+			local size = art.size[anim]
+			play(self, "npc_" .. id, anim)
+			flip(self, "npc_" .. id, n.dir < 0)
+			place("npc_" .. id, round(n.x - size[1] / 2), y - size[2], size[1], size[2])
+
+			-- Vision cone, cut short by a closed door.
+			local range = level.SIGHT_RANGE
+			for _, d in ipairs(g.doors) do
+				if not d.open and d.floor == n.floor and (d.x - n.x) * n.dir > 0 then
+					range = math.min(range, math.abs(d.x - n.x))
+				end
+			end
+			local cone = "cone_" .. id
+			local ch = n.height > 10 and 23 or 18
+			local left = n.dir > 0 and n.x or n.x - range
+			flip(self, cone, n.dir < 0)
+			place(cone, left, y - ch, range, ch)
+			go.set_scale(vmath.vector3(math.max(range, 0.01) / 64, 1, 1), "/" .. cone)
+			tint(self, cone, CONE, 0.10 + n.sus * 0.22)
+		end
+	end
+end
+
+local function sync_santa(self, g, alpha)
+	local s = g.santa
+	if s.mode == "hidden" and s.hide then
+		-- Two peeking eyes where Santa is hiding.
+		show(self, "santa", false)
+		local blink = math.floor(g.time * 1.3) % 4 == 0
+		show(self, "eyes", not blink)
+		place("eyes", (s.hide.x0 + s.hide.x1) / 2 - 2, FLOOR[s.hide.floor] - 7, 4, 1)
+		return
+	end
+	show(self, "eyes", false)
+	local x = s.px + (s.x - s.px) * alpha
+	local y = s.py + (s.y - s.py) * alpha
+	-- Out of sight inside the chimney stack while sliding.
+	local in_chimney = s.mode == "tween" and s.floor == 0 and y < FLOOR[0] - 8
+	show(self, "santa", not in_chimney)
+	local moving = math.abs(s.vx) > 4 or s.mode == "tween"
+	local frame = moving and math.floor(s.anim) % 2 or 0
+	play(self, "santa", (g.delivered and "santa_" or "santa_sack_") .. frame)
+	flip(self, "santa", s.face < 0)
+	place("santa", round(x) - 7, round(y) - 11, 14, 11)
+end
+
+-- ---------------------------------------------------------------- HUD
+
+local function thousands(n)
+	local s = tostring(math.floor(n))
+	local out = s:reverse():gsub("(%d%d%d)", "%1,"):reverse()
+	return (out:gsub("^,", ""))
+end
+
+local function sync_hud(self, g)
+	local hud = {
+		score = thousands(g.score),
+		objective = g:objective(),
+		attempt = g.attempt,
+		prompt = "",
+		prompt_key = "",
+		action_label = "ACTION",
+		toast = g.toast_text or "",
+		phase = g.phase,
+		muted = self.muted,
+	}
+	local it = g.phase == "play" and g.interaction or nil
+	if it then
+		hud.prompt = it.label
+		hud.prompt_key = it.trigger == "up" and "↑ / E" or (it.trigger == "down" and "↓ / E" or "E")
+		hud.action_label = string.upper(it.label:match("^(%S+)") or "ACTION")
+	end
+	if g.result then
+		local labels, points = {}, {}
+		for _, row in ipairs(g.result.rows) do
+			labels[#labels + 1] = row[1]
+			points[#points + 1] = thousands(row[2])
+		end
+		hud.end_title = g.result.title
+		hud.end_text = g.result.text
+		hud.end_labels = table.concat(labels, "\n")
+		hud.end_points = table.concat(points, "\n")
+		hud.end_total = thousands(g.result.total)
+		hud.end_best = g.result.best > 0 and ("Best: " .. thousands(g.result.best)) or ""
+	end
+	-- Only message the GUI when something changed.
+	local parts = {}
+	for _, k in ipairs({ "score", "objective", "attempt", "prompt", "prompt_key", "action_label", "toast", "phase",
+		"muted", "end_title", "end_text", "end_labels", "end_points", "end_total", "end_best" }) do
+		parts[#parts + 1] = tostring(hud[k])
+	end
+	local signature = table.concat(parts, "|")
+	if signature ~= self.hud_signature then
+		self.hud_signature = signature
+		msg.post(HUD_URL, "hud", hud)
+	end
+end
+
+-- ---------------------------------------------------------------- control
+
+local function start_game(self)
+	self.game:start()
+	self.edges = {}
+end
+
+local function toggle_pause(self)
+	local g = self.game
+	if g.phase == "play" then
+		g:set_paused(true)
+	elseif g.phase == "paused" then
+		g:set_paused(false)
+	end
+end
+
+local function toggle_sound(self)
+	self.muted = not self.muted
+	apply_mute(self)
+	save(self)
+end
+
+local function axis(self)
+	local k = self.keys
+	local x = (k.right and 1 or 0) - (k.left and 1 or 0)
+	x = x + (self.touch_right and 1 or 0) - (self.touch_left and 1 or 0)
+	local stick = (self.stick.right or 0) - (self.stick.left or 0)
+	if math.abs(stick) >= 0.25 then x = x + stick end
+	return math.max(-1, math.min(1, x))
+end
+
+-- ---------------------------------------------------------------- lifecycle
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.urls, self.shown, self.anims, self.flips = {}, {}, {}, {}
+	self.keys, self.stick, self.edges = {}, {}, {}
+	self.touch_left, self.touch_right = false, false
+	self.acc = 0
+	self.step_flip = false
+
+	self.save_path = sys.get_save_file(SAVE_APP, "save")
+	local saved = sys.load(self.save_path) or {}
+	self.muted = saved.muted == true
+
+	self.game = gamemod.new(function(name, gain) play_sound(self, name, gain) end)
+	self.game.best = saved.best or 0
+	self.saved_best = self.game.best
+	apply_mute(self)
+
+	for _, r in ipairs(level.ROOMS) do
+		tint(self, "dim_" .. r.id, DIM, DIM.w)
+	end
+
+	-- Pause when the app loses focus (switching apps, locking the iPad).
+	if window and window.set_listener then
+		window.set_listener(function(_, event)
+			if event == window.WINDOW_EVENT_FOCUS_LOST and self.game.phase == "play" then
+				self.game:set_paused(true)
+			end
+		end)
+	end
+end
+
+function update(self, dt)
+	local g = self.game
+	g.input.axis = axis(self)
+
+	if g.phase ~= "paused" then
+		self.acc = self.acc + math.min(dt, 0.25)
+		local steps = 0
+		while self.acc >= STEP and steps < 20 do
+			local e = self.edges
+			if e.jump then g.input.jump = true end
+			if e.action then g.input.action = true end
+			if e.up then g.input.up = true end
+			if e.down then g.input.down = true end
+			self.edges = {}
+			g:update(STEP)
+			self.acc = self.acc - STEP
+			steps = steps + 1
+		end
+	end
+	if g.phase ~= "play" then
+		-- Presses made outside play shouldn't fire later.
+		g:consume_input()
+		self.edges = {}
+	end
+	local alpha = g.phase == "play" and self.acc / STEP or 1
+
+	if g.best > self.saved_best then
+		self.saved_best = g.best
+		save(self)
+	end
+
+	sync_house(self, g)
+	sync_highlight(self, g)
+	sync_family(self, g)
+	sync_santa(self, g, alpha)
+	sync_hud(self, g)
+end
+
+function on_message(self, message_id, message)
+	if message_id ~= MSG_UI then return end
+	local cmd = message.cmd
+	if cmd == "hold" then
+		self.touch_left = message.left == true
+		self.touch_right = message.right == true
+	elseif cmd == "tap" then
+		if message.button == "jump" then self.edges.jump = true end
+		if message.button == "action" then self.edges.action = true end
+	elseif cmd == "start" then
+		start_game(self)
+	elseif cmd == "pause" then
+		toggle_pause(self)
+	elseif cmd == "sound" then
+		toggle_sound(self)
+	end
+end
+
+function on_input(self, action_id, action)
+	if not action_id then return false end
+	local g = self.game
+
+	if action_id == ACTIONS.stick_left or action_id == ACTIONS.stick_right then
+		local key = action_id == ACTIONS.stick_left and "left" or "right"
+		self.stick[key] = action.released and 0 or (action.value or 0)
+		return false
+	end
+	if action_id == ACTIONS.stick_up or action_id == ACTIONS.stick_down then
+		local key = action_id == ACTIONS.stick_up and "up" or "down"
+		local was = (self.stick[key] or 0) > 0.6
+		self.stick[key] = action.released and 0 or (action.value or 0)
+		if not was and self.stick[key] > 0.6 then self.edges[key] = true end
+		return false
+	end
+
+	for name, id in pairs(ACTIONS) do
+		if action_id == id then
+			if action.pressed then
+				self.keys[name] = true
+				if name == "pause" then
+					toggle_pause(self)
+				elseif (g.phase == "title" or g.phase == "won") and (name == "jump" or name == "action") then
+					start_game(self)
+				elseif name == "jump" or name == "action" or name == "up" or name == "down" then
+					self.edges[name] = true
+				end
+			elseif action.released then
+				self.keys[name] = false
+			end
+			return false
+		end
+	end
+	return false
+end
+
+function final(self)
+	msg.post(".", "release_input_focus")
+end
